@@ -6,13 +6,11 @@
 {% endblock %}
 
 {% block content %}
-<!-- Герой-секция (баннер) -->
 <div class="px-4 py-5 my-4 text-center rounded-3 bg-light"
      style="background: linear-gradient(135deg, #ffe6f0 0%, #e6f3ff 50%, #f0e6ff 100%);">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <!-- Круглая картинка сверху -->
                 <img src="{% static 'img/anfisa.png' %}" 
                      alt="Анфиса" 
                      class="rounded-circle mb-4 shadow"
@@ -41,7 +39,6 @@
     </div>
 </div>
 
-<!-- Преимущества -->
 <div class="container my-5">
     <div class="row text-center g-4">
         <div class="col-md-3">
@@ -75,7 +72,6 @@
     </div>
 </div>
 
-<!-- Хиты продаж -->
 <div class="container my-5">
     <div class="text-center mb-4">
         <h2 class="display-6">🔥 Хиты продаж 🔥</h2>
@@ -85,7 +81,7 @@
         {% for hit in hits %}
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="{% static hit.image %}" 
+                <img src="{{ hit.image.url }}" 
                      class="card-img-top" 
                      alt="{{ hit.title }}"
                      style="height: 250px; object-fit: cover;">
@@ -105,7 +101,6 @@
     </div>
 </div>
 
-<!-- Акция/Баннер -->
 <div class="container my-5">
     <div class="card text-bg-warning border-0 rounded-4 overflow-hidden">
         <div class="card-body p-5 text-center">
@@ -125,7 +120,6 @@
     </div>
 </div>
 
-<!-- Отзывы -->
 <div class="container my-5">
     <div class="text-center mb-4">
         <h2 class="display-6">💬 Отзывы наших клиентов</h2>

@@ -1,22 +1,31 @@
-from django.shortcuts import render
-from django.http import Http404
-from .data import ice_cream_catalog
+from django.views.generic import DetailView
+from django_filters.views import FilterView
 
-def ice_cream_detail(request, pk):
-    try:
-        pk = int(pk)
-    except ValueError as exc:
-        raise Http404("Неверный ID товара") from exc
-
-    if pk < 0 or pk >= len(ice_cream_catalog):
-        raise Http404("мороженое не найдено")
-
-    template = 'ice_cream/detail.html'
-    context = {'ice_cream': ice_cream_catalog[pk]}
-    return render(request, template, context)
+from .filters import IceCreamFilter
+from .models import IceCream
 
 
-def ice_cream_list(request):
-    template = 'ice_cream/list.html'
-    context = {'ice_cream_list': ice_cream_catalog}
-    return render(request, template, context)
+class IceCreamListView(FilterView):
+    """
+    Отображает список всех продуктов.
+    """
+    model = IceCream
+    template_name = 'ice_cream/list.html'
+    context_object_name = 'ice_cream_list'
+    filterset_class = IceCreamFilter
+    ordering = ['title']
+    paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.filterset
+        return context
+
+
+class IceCreamDetailView(DetailView):
+    """
+    Отображает детальную информацию о продукте.
+    """
+    model = IceCream
+    template_name = 'ice_cream/detail.html'
+    context_object_name = 'ice_cream'

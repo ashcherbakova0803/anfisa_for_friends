@@ -7,23 +7,24 @@
 
 {% block content %}
 <div class="row">
-    <!-- Левая колонка: картинка -->
     <div class="col-12 col-md-5 mb-4">
         <div class="card border-0">
             <img 
                 class="card-img-top rounded shadow"
-                src="{% static ice_cream.image %}"
+                src="{{ ice_cream.image.url }}"
                 alt="{{ ice_cream.title }}"
                 style="object-fit: cover; height: 400px;"
             >
         </div>
     </div>
 
-    <!-- Правая колонка: основная информация -->
     <div class="col-12 col-md-7">
         <h1 class="display-5 mb-3">{{ ice_cream.title }}</h1>
         
-        <!-- Цена и вес крупно -->
+        <div class="mb-3">
+            <span class="badge bg-primary fs-6">{{ ice_cream.category.name }}</span>
+        </div>
+        
         <div class="alert alert-success mb-4">
             <span class="display-6">{{ ice_cream.price }} ₽</span>
             <span class="text-muted">/ {{ ice_cream.weight }} г</span>
@@ -32,7 +33,6 @@
           Заказать
         </a>
         
-        <!-- Описание -->
         <div class="mb-4 mt-3">
             <h3><i class="fas fa-info-circle"></i> Описание</h3>
             <p class="lead">{{ ice_cream.description }}</p>
@@ -40,20 +40,19 @@
     </div>
 </div>
 
-<!-- Полная ширина: состав и КБЖУ -->
 <div class="row mt-4">
     <div class="col-12">
-        <!-- Состав -->
         <div class="mb-4">
             <h3><i class="fas fa-list"></i> Состав</h3>
             <ul class="list-group list-group-horizontal-md flex-wrap">
-                {% for ingredient in ice_cream.ingredients %}
-                    <li class="list-group-item bg-light m-1 rounded-pill">{{ ingredient }}</li>
+                {% for ingredient in ice_cream.ingredients.all %}
+                    <li class="list-group-item bg-light m-1 rounded-pill">{{ ingredient.name }}</li>
+                {% empty %}
+                    <li class="list-group-item bg-light m-1 rounded-pill">Ингредиенты не указаны</li>
                 {% endfor %}
             </ul>
         </div>
 
-        <!-- КБЖУ в виде карточек -->
         <div class="mb-4">
             <h3><i class="fas fa-chart-line"></i> Пищевая ценность (на 100 г)</h3>
             <div class="row g-2">
@@ -91,8 +90,9 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-<!-- Кнопка назад -->
 <div class="row mt-4">
     <div class="col-12">
         <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-outline-secondary">

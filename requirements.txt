@@ -2,11 +2,13 @@ asgiref==3.11.1
 Django==6.1
 django-filter==26.1
 flake8==5.0.4
+git-filter-repo==2.47.0
 isort==8.0.1
 mccabe==0.7.0
 pillow==12.3.0
 pycodestyle==2.9.1
 pyflakes==2.5.0
+python-dotenv==1.2.3
 pytz==2026.2
 sqlparse==0.5.5
 tzdata==2026.3

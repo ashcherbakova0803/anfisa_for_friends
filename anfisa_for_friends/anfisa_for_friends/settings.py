@@ -94,3 +94,5 @@ STATICFILES_DIRS = [
     ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# HANDLER404 = 'your_app.views.custom_404'

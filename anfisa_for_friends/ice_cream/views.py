@@ -1,27 +1,16 @@
 from django.shortcuts import render
-
-ice_cream_catalog = [
-    {
-        'id': 0,
-        'title': 'Классический пломбир',
-        'description': 'Настоящее мороженое, для истинных ценителей вкуса. '
-                       'Если на столе появляется пломбир — это не надолго.',
-    },
-    {
-        'id': 1,
-        'title': 'Мороженое с кузнечиками',
-        'description': 'В колумбийском стиле: мороженое '
-                       'с добавлением настоящих карамелизованных кузнечиков.',
-    },
-    {
-        'id': 2,
-        'title': 'Мороженое со вкусом сыра чеддер',
-        'description': 'Вкус настоящего сыра в вафельном стаканчике.',
-    },
-]
-
+from django.http import Http404
+from .data import ice_cream_catalog
 
 def ice_cream_detail(request, pk):
+    try:
+        pk = int(pk)
+    except ValueError as exc:
+        raise Http404("Неверный ID товара") from exc
+
+    if pk < 0 or pk >= len(ice_cream_catalog):
+        raise Http404("мороженое не найдено")
+
     template = 'ice_cream/detail.html'
     context = {'ice_cream': ice_cream_catalog[pk]}
     return render(request, template, context)

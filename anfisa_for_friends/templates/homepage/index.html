@@ -1,7 +1,169 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}
-  Анфиса для друзей. Главная
+  Анфиса для друзей - Главная
 {% endblock %}
+
 {% block content %}
-  <h1>Главная страница</h1>
+<!-- Герой-секция (баннер) -->
+<div class="px-4 py-5 my-4 text-center rounded-3 bg-light"
+     style="background: linear-gradient(135deg, #ffe6f0 0%, #e6f3ff 50%, #f0e6ff 100%);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Круглая картинка сверху -->
+                <img src="{% static 'img/anfisa.png' %}" 
+                     alt="Анфиса" 
+                     class="rounded-circle mb-4 shadow"
+                     style="width: 120px; height: 120px; object-fit: cover;">
+                
+                <h1 class="display-3 fw-bold text-primary mb-3">
+                    Анфиса для друзей
+                </h1>
+                <p class="lead fs-4 mb-4">
+                    Самое вкусное и необычное мороженое в городе!
+                </p>
+                <p class="mb-4">
+                    Натуральные ингредиенты, авторские рецепты и уникальные вкусы. 
+                    У нас вы найдёте как классический пломбир, так и эксперименты на любой вкус.
+                </p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                        Смотреть каталог
+                    </a>
+                    <a href="{% url 'about:description' %}" class="btn btn-outline-secondary btn-lg px-4">
+                        О проекте
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Преимущества -->
+<div class="container my-5">
+    <div class="row text-center g-4">
+        <div class="col-md-3">
+            <div class="feature-icon d-inline-block bg-primary bg-gradient text-white rounded-circle p-3 mb-3">
+                <span style="font-size: 2rem;">🍦</span>
+            </div>
+            <h3>15+ вкусов</h3>
+            <p>Классические и экспериментальные рецепты</p>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-icon d-inline-block bg-success bg-gradient text-white rounded-circle p-3 mb-3">
+                <span style="font-size: 2rem;">🥛</span>
+            </div>
+            <h3>Натуральные</h3>
+            <p>Только качественные ингредиенты</p>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-icon d-inline-block bg-warning bg-gradient text-white rounded-circle p-3 mb-3">
+                <span style="font-size: 2rem;">🚚</span>
+            </div>
+            <h3>Доставка</h3>
+            <p>Бесплатно от 1000 рублей</p>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-icon d-inline-block bg-info bg-gradient text-white rounded-circle p-3 mb-3">
+                <span style="font-size: 2rem;">❤️</span>
+            </div>
+            <h3>Любовь</h3>
+            <p>Готовим с душой для вас</p>
+        </div>
+    </div>
+</div>
+
+<!-- Хиты продаж -->
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h2 class="display-6">🔥 Хиты продаж 🔥</h2>
+        <p class="text-muted">Самые популярные вкусы этим летом</p>
+    </div>
+    <div class="row">
+        {% for hit in hits %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{% static hit.image %}" 
+                     class="card-img-top" 
+                     alt="{{ hit.title }}"
+                     style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ hit.title }}</h5>
+                    <p class="card-text">{{ hit.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 text-primary">{{ hit.price }} ₽</span>
+                        <a href="{% url 'ice_cream:ice_cream_detail' hit.id %}" class="btn btn-sm btn-outline-primary">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Акция/Баннер -->
+<div class="container my-5">
+    <div class="card text-bg-warning border-0 rounded-4 overflow-hidden">
+        <div class="card-body p-5 text-center">
+            <h2 class="display-5 fw-bold">🎉 Скидка 20% на первый заказ! 🎉</h2>
+            <p class="fs-5 mb-4">Подпишитесь на рассылку и получите промокод</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="email" class="form-control form-control-lg" placeholder="Ваш email">
+                        <button class="btn btn-dark btn-lg" onclick="alert('Спасибо! Промокод отправлен на почту 🍦')">
+                            Подписаться
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Отзывы -->
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h2 class="display-6">💬 Отзывы наших клиентов</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="mb-2">
+                        ★★★★★
+                    </div>
+                    <p class="card-text">"Пломбир просто божественный! Настоящий вкус детства. Обязательно закажу ещё!"</p>
+                    <footer class="blockquote-footer mt-3">Анна</footer>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="mb-2">
+                        ★★★★★
+                    </div>
+                    <p class="card-text">"Мороженое с кузнечиками - это что-то невероятное! Сначала страшно, потом очень вкусно!"</p>
+                    <footer class="blockquote-footer mt-3">Максим</footer>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="mb-2">
+                        ★★★★★
+                    </div>
+                    <p class="card-text">"Очень быстрая доставка и красивая упаковка. Теперь только к вам!"</p>
+                    <footer class="blockquote-footer mt-3">Екатерина</footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

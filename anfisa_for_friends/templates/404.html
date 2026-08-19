@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Страница не найдена - Анфиса для друзей
+{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="mb-4">
+        <img src="{% static 'img/404-ice-cream.png' %}" alt="404" style="max-width: 300px;" class="img-fluid">
+    </div>
+    <h2 class="mb-3">Ой, мороженое растаяло!</h2>
+    <p class="lead mb-4">Кажется, такого мороженого у нас нет в меню. Возможно, его съели программисты во время деплоя.</p>
+    <div class="mb-4">
+        <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-primary btn-lg">
+            Посмотреть каталог
+        </a>
+        <a href="{% url 'homepage:index' %}" class="btn btn-outline-secondary btn-lg ms-2">
+            На главную
+        </a>
+    </div>
+</div>
+{% endblock %}

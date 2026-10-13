@@ -2,24 +2,28 @@
 {% load static %}
 
 {% block title %}
-  Что-то пошло не так - Анфиса для друзей
+  Что-то пошло не так — Анфиса для друзей
 {% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
+  <div class="text-center py-5">
     <div class="mb-4">
-        <img src="{% static 'img/500-ice-cream.png' %}" alt="500" style="max-width: 300px;" class="img-fluid">
+      <img src="{% static 'img/500-ice-cream.png' %}" alt="500" style="max-width: 300px;" class="img-fluid">
     </div>
     <h2 class="mb-3">Ой, мороженое упало!</h2>
-    <p class="lead mb-4">Извините, на нашей кухне что-то пошло не так. Мы уже чиним холодильник!</p>
+    <p class="lead mb-4">
+      Извините, на нашей кухне что-то пошло не так. Мы уже чиним холодильник!
+    </p>
     <div class="mb-4">
-        <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-primary btn-lg">
-            Посмотреть каталог
-        </a>
-        <a href="{% url 'homepage:index' %}" class="btn btn-outline-secondary btn-lg ms-2">
-            На главную
-        </a>
+      <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-primary btn-lg">
+        Посмотреть каталог
+      </a>
+      <a href="{% url 'homepage:index' %}" class="btn btn-outline-secondary btn-lg ms-2">
+        На главную
+      </a>
     </div>
-    <p class="text-muted small">Наши холодильники всё ещё работают, просто что-то пошло не по плану. Попробуйте перезагрузить страницу.</p>
-</div>
+    <p class="text-muted small">
+      Наши холодильники всё ещё работают, просто что-то пошло не по плану. Попробуйте перезагрузить страницу.
+    </p>
+  </div>
 {% endblock %}

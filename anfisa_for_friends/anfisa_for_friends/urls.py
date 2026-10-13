@@ -9,5 +9,7 @@ urlpatterns = [
     path('about/', include('about.urls', namespace='about')),
     path('ice_cream/', include('ice_cream.urls', namespace='ice_cream')),
     path('admin/', admin.site.urls),
+    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/', include('users.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,7 +4,7 @@
 
 ## Технологии
 
-- Django 3.2
+- Django 6.1
 - SQLite
 - Bootstrap 5
 - django-filter

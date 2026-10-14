@@ -9,4 +9,8 @@ urlpatterns = [
     path('update/<int:item_id>/', views.cart_update, name='cart_update'),
     path('remove/<int:item_id>/', views.cart_remove, name='cart_remove'),
     path('update-ajax/', views.cart_update_ajax, name='cart_update_ajax'),
+    path('order/create/', views.order_create, name='order_create'),
+    path('order/success/<int:order_id>/',
+         views.order_success, name='order_success'),
+    path('orders/', views.order_history, name='order_history'),
 ]

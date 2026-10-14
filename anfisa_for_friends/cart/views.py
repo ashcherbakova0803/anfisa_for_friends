@@ -1,10 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import json
 
 from .cart import CartService
+from .forms import OrderCreateForm
+from .models import Order, OrderItem
 
 
 def cart_detail(request):
@@ -79,3 +82,63 @@ def cart_update_ajax(request):
         'cart_total': str(cart.total_price),
         'cart_items': cart.total_items,
     })
+
+
+def order_create(request):
+    """
+    Оформление заказа из корзины.
+    Создаёт заказ, переносит позиции из корзины, очищает корзину.
+    """
+    cart_service = CartService(request)
+    cart = cart_service.cart
+
+    if not cart.items.exists():
+        messages.warning(request, 'Ваша корзина пуста.')
+        return redirect('ice_cream:ice_cream_list')
+
+    if request.method == 'POST':
+        form = OrderCreateForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            if request.user.is_authenticated:
+                order.user = request.user
+            order.total_price = cart.total_price
+            order.save()
+
+            for item in cart.items.all():
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    product_title=item.product.title,
+                    price=item.product.price,
+                    quantity=item.quantity,
+                )
+
+            cart_service.clear()
+
+            messages.success(request, 'Заказ успешно оформлен!')
+            return redirect('cart:order_success', order_id=order.id)
+    else:
+        form = OrderCreateForm()
+
+    return render(request, 'cart/order_create.html', {
+        'form': form,
+        'cart': cart,
+    })
+
+
+def order_success(request, order_id):
+    """
+    Страница «Спасибо за заказ».
+    """
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'cart/order_success.html', {'order': order})
+
+
+@login_required
+def order_history(request):
+    """
+    История заказов текущего пользователя.
+    """
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'cart/order_history.html', {'orders': orders})

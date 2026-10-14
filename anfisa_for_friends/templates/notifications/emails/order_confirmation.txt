@@ -1,0 +1,22 @@
+Здравствуйте, {{ order.first_name }}!
+
+Спасибо за ваш заказ №{{ order.id }} от {{ order.created_at|date:"d.m.Y H:i" }}.
+
+Состав заказа:
+{% for item in order.items.all %}
+- {{ item.product_title }} × {{ item.quantity }} — {{ item.total_price }} ₽
+{% endfor %}
+
+Итого: {{ order.total_price }} ₽
+
+Адрес доставки:
+{{ order.address }}
+
+{% if order.comment %}
+Комментарий: {{ order.comment }}
+{% endif %}
+
+Мы свяжемся с вами в ближайшее время для подтверждения заказа.
+
+С уважением,
+команда «Анфиса для друзей»

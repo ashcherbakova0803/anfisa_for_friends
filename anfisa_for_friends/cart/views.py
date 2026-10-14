@@ -8,6 +8,7 @@ import json
 from .cart import CartService
 from .forms import OrderCreateForm
 from .models import Order, OrderItem
+from notifications.emails import send_order_confirmation
 
 
 def cart_detail(request):
@@ -58,7 +59,6 @@ def cart_update_ajax(request):
     """
     AJAX-обновление количества товара в корзине.
     Принимает JSON: {"item_id": 1, "quantity": 2}
-    Возвращает JSON: {"success": true, "item_total": ..., "cart_total": ..., "cart_items": ...}
     """
     try:
         data = json.loads(request.body)
@@ -115,10 +115,13 @@ def order_create(request):
                 )
 
             cart_service.clear()
-            messages.success(request, 'Заказ успешно оформлен!')
+            send_order_confirmation(order)
+            messages.success(
+                request,
+                'Заказ успешно оформлен! Мы отправили подтверждение на вашу почту.'
+            )
             return redirect('cart:order_success', order_id=order.id)
     else:
-        # Предзаполняем форму из профиля пользователя
         if request.user.is_authenticated:
             initial_data = {
                 'first_name': request.user.first_name,

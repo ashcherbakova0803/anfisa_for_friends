@@ -1,11 +1,15 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from .models import Review
+from .moderation import contains_forbidden_words
 
 
 class ReviewForm(forms.ModelForm):
     """
     Форма для создания отзыва.
     Позволяет поставить оценку, написать текст и прикрепить одно фото.
+    Проверяет текст на запрещённые слова.
     """
     image = forms.ImageField(
         label='Фото',
@@ -31,3 +35,18 @@ class ReviewForm(forms.ModelForm):
                 'placeholder': 'Поделитесь впечатлениями о мороженом...'
             }),
         }
+
+    def clean_text(self):
+        """
+        Проверяет текст отзыва на запрещённые слова.
+        Если найдено — выбрасывает ValidationError.
+        """
+        text = self.cleaned_data.get('text', '')
+
+        if contains_forbidden_words(text):
+            raise ValidationError(
+                'Ваш отзыв содержит недопустимые слова. '
+                'Пожалуйста, переформулируйте.'
+            )
+
+        return text

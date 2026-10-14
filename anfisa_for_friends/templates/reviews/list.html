@@ -6,7 +6,13 @@
 
 {% block content %}
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-    <h1 class="mb-0">Отзывы наших клиентов</h1>
+    <h1 class="mb-0">
+      {% if current_product %}
+        Отзывы о «{{ current_product.title }}»
+      {% else %}
+        Отзывы наших клиентов
+      {% endif %}
+    </h1>
 
     <div class="d-flex gap-2">
       <div class="dropdown">
@@ -21,7 +27,7 @@
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="ratingDropdown">
           <li>
             <a class="dropdown-item {% if not current_rating %}active{% endif %}"
-              href="?sort={{ current_sort }}">
+              href="?sort={{ current_sort }}{% if current_product %}&product={{ current_product.id }}{% endif %}">
               Все оценки
             </a>
           </li>
@@ -29,7 +35,7 @@
           {% for star, count in rating_counts.items %}
             <li>
               <a class="dropdown-item d-flex justify-content-between align-items-center {% if current_rating == star|stringformat:"s" %}active{% endif %}"
-                href="?rating={{ star }}&sort={{ current_sort }}">
+                href="?rating={{ star }}&sort={{ current_sort }}{% if current_product %}&product={{ current_product.id }}{% endif %}">
                 <span>{{ star }}★</span>
                 <span class="badge bg-secondary ms-2">{{ count }}</span>
               </a>
@@ -54,26 +60,26 @@
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
           <li>
             <a class="dropdown-item {% if current_sort == 'newest' %}active{% endif %}"
-              href="?sort=newest{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              href="?sort=newest{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">
               <i class="fas fa-clock me-2"></i> Сначала новые
             </a>
           </li>
           <li>
             <a class="dropdown-item {% if current_sort == 'oldest' %}active{% endif %}"
-              href="?sort=oldest{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              href="?sort=oldest{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">
               <i class="fas fa-history me-2"></i> Сначала старые
             </a>
           </li>
           <li><hr class="dropdown-divider"></li>
           <li>
             <a class="dropdown-item {% if current_sort == 'positive' %}active{% endif %}"
-              href="?sort=positive{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              href="?sort=positive{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">
               <i class="fas fa-thumbs-up me-2"></i> Сначала положительные
             </a>
           </li>
           <li>
             <a class="dropdown-item {% if current_sort == 'negative' %}active{% endif %}"
-              href="?sort=negative{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              href="?sort=negative{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">
               <i class="fas fa-thumbs-down me-2"></i> Сначала отрицательные
             </a>
           </li>
@@ -81,6 +87,14 @@
       </div>
     </div>
   </div>
+
+  {% if current_product %}
+    <div class="mb-3">
+      <a href="{% url 'reviews:list' %}" class="btn btn-sm btn-outline-secondary">
+        ← Все отзывы
+      </a>
+    </div>
+  {% endif %}
 
   {% if reviews %}
     <div class="row g-4">
@@ -110,6 +124,34 @@
         </div>
       {% endfor %}
     </div>
+
+    {% if page_obj.has_other_pages %}
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">&laquo; Первая</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">Назад</a>
+            </li>
+          {% endif %}
+
+          <li class="page-item active">
+            <span class="page-link">{{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+          </li>
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">Вперёд</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_rating %}&rating={{ current_rating }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_product %}&product={{ current_product.id }}{% endif %}">Последняя &raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
   {% else %}
     <div class="text-center py-5">
       <p class="lead">По вашему фильтру ничего не найдено.</p>

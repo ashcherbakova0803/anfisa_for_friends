@@ -134,3 +134,7 @@ if EMAIL_BACKEND == 'django.core.mail.backends.smtp.EmailBackend':
     EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False') == 'True'
     EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+PAGINATE_BY_CATALOG = 6
+PAGINATE_BY_REVIEWS = 10
+REVIEWS_ON_PRODUCT_PAGE = 5

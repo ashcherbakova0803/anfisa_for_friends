@@ -64,3 +64,26 @@ def send_newsletter(subject, template_name, context=None):
         recipient_list=emails,
     )
     return len(emails)
+
+
+def send_review_request(order):
+    """
+    Отправляет письмо с просьбой оставить отзыв.
+    Вызывается, когда заказ получает статус «Выполнен».
+    """
+    if not order.email:
+        return
+
+    items = order.items.select_related('product').all()
+    if not items:
+        return
+
+    _send_email(
+        subject=f'Поделитесь впечатлениями о заказе №{order.id}',
+        template_name='notifications/emails/review_request.txt',
+        context={
+            'order': order,
+            'items': items,
+        },
+        recipient_list=[order.email],
+    )

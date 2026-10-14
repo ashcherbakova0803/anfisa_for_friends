@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load review_tags %}
 
 {% block title %}
   Анфиса для друзей. Каталог мороженого
@@ -42,38 +43,47 @@
 
   <div class="row">
     {% for ice_cream in ice_cream_list %}
-    <div class="col-6 col-md-4 my-1">
-      <div class="card h-100 shadow-sm">
-        <img 
-          class="img-fluid card-img-top rounded"
-          height="400" width="300"
-          src="{{ ice_cream.image.url }}"
-          alt="{{ ice_cream.title }}"
-        >
-        <div class="card-body">
-          <h5 class="card-title">{{ ice_cream.title }}</h5>
-          <p class="card-text text-muted small">
-            {{ ice_cream.description|truncatewords:10 }}
-          </p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="h5 text-primary">{{ ice_cream.price }} ₽</span>
-            <a class="btn btn-sm btn-outline-primary" href="{% url 'ice_cream:ice_cream_detail' ice_cream.id %}">
-              Подробнее →
-            </a>
+      <div class="col-6 col-md-4 my-1">
+        <div class="card h-100 shadow-sm">
+          <img
+            class="img-fluid card-img-top rounded"
+            height="400" width="300"
+            src="{{ ice_cream.image.url }}"
+            alt="{{ ice_cream.title }}"
+          >
+          <div class="card-body">
+            <h5 class="card-title">{{ ice_cream.title }}</h5>
+
+            <div class="mb-2">
+              {% render_stars ice_cream.stars_with_percent %}
+              <small class="text-muted">
+                {{ ice_cream.average_rating }} ({{ ice_cream.reviews_count }})
+              </small>
+            </div>
+
+            <p class="card-text text-muted small">
+              {{ ice_cream.description|truncatewords:10 }}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="h5 text-primary">{{ ice_cream.price }} ₽</span>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'ice_cream:ice_cream_detail' ice_cream.id %}">
+                Подробнее →
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     {% empty %}
-    <div class="col-12">
-      <div class="text-center py-5">
-        <i class="fas fa-ice-cream fa-3x text-muted mb-3"></i>
-        <p class="lead">По вашему запросу ничего не найдено.</p>
-        <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-outline-primary">
-          <i class="fas fa-undo me-1"></i> Сбросить фильтры
-        </a>
+      <div class="col-12">
+        <div class="text-center py-5">
+          <i class="fas fa-ice-cream fa-3x text-muted mb-3"></i>
+          <p class="lead">По вашему запросу ничего не найдено.</p>
+          <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-outline-primary">
+            <i class="fas fa-undo me-1"></i> Сбросить фильтры
+          </a>
+        </div>
       </div>
-    </div>
     {% endfor %}
   </div>
 

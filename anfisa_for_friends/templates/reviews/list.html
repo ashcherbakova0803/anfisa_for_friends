@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Отзывы — Анфиса для друзей
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="mb-0">Отзывы наших клиентов</h1>
+
+    <div class="d-flex gap-2">
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="ratingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-star text-warning me-1"></i>
+          {% if current_rating %}
+            {{ current_rating }}★
+          {% else %}
+            Все оценки
+          {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="ratingDropdown">
+          <li>
+            <a class="dropdown-item {% if not current_rating %}active{% endif %}"
+              href="?sort={{ current_sort }}">
+              Все оценки
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          {% for star, count in rating_counts.items %}
+            <li>
+              <a class="dropdown-item d-flex justify-content-between align-items-center {% if current_rating == star|stringformat:"s" %}active{% endif %}"
+                href="?rating={{ star }}&sort={{ current_sort }}">
+                <span>{{ star }}★</span>
+                <span class="badge bg-secondary ms-2">{{ count }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-sort me-1"></i>
+          {% if current_sort == 'oldest' %}
+            Сначала старые
+          {% elif current_sort == 'positive' %}
+            Сначала положительные
+          {% elif current_sort == 'negative' %}
+            Сначала отрицательные
+          {% else %}
+            Сначала новые
+          {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
+          <li>
+            <a class="dropdown-item {% if current_sort == 'newest' %}active{% endif %}"
+              href="?sort=newest{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              <i class="fas fa-clock me-2"></i> Сначала новые
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item {% if current_sort == 'oldest' %}active{% endif %}"
+              href="?sort=oldest{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              <i class="fas fa-history me-2"></i> Сначала старые
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item {% if current_sort == 'positive' %}active{% endif %}"
+              href="?sort=positive{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              <i class="fas fa-thumbs-up me-2"></i> Сначала положительные
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item {% if current_sort == 'negative' %}active{% endif %}"
+              href="?sort=negative{% if current_rating %}&rating={{ current_rating }}{% endif %}">
+              <i class="fas fa-thumbs-down me-2"></i> Сначала отрицательные
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {% if reviews %}
+    <div class="row g-4">
+      {% for review in reviews %}
+        <div class="col-md-6">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title mb-0">{{ review.product.title }}</h5>
+                <span class="text-warning">{{ review.stars }}</span>
+              </div>
+              <p class="text-muted small mb-2">
+                {{ review.user.username }} · {{ review.created_at|date:"d.m.Y" }}
+              </p>
+              <p class="card-text">{{ review.text }}</p>
+              {% if review.images.all %}
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  {% for img in review.images.all %}
+                    <img src="{{ img.image.url }}" alt="Фото отзыва"
+                      class="review-image"
+                      style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer;">
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-5">
+      <p class="lead">По вашему фильтру ничего не найдено.</p>
+      <a href="{% url 'reviews:list' %}" class="btn btn-primary">
+        Показать все отзывы
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body p-0 position-relative">
+          <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Закрыть" style="z-index: 10;"></button>
+          <img id="modalImage" src="" alt="Фото отзыва" class="img-fluid w-100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+      const modalImage = document.getElementById('modalImage');
+
+      document.querySelectorAll('.review-image').forEach(function (img) {
+        img.addEventListener('click', function () {
+          modalImage.src = this.src;
+          imageModal.show();
+        });
+      });
+    });
+  </script>
+{% endblock %}

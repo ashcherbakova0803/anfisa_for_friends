@@ -3,6 +3,7 @@ from django_filters.views import FilterView
 
 from .filters import IceCreamFilter
 from .models import IceCream
+from reviews.models import can_review
 
 
 class IceCreamListView(FilterView):
@@ -29,3 +30,11 @@ class IceCreamDetailView(DetailView):
     model = IceCream
     template_name = 'ice_cream/detail.html'
     context_object_name = 'ice_cream'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['can_review'] = can_review(self.request.user, self.object)
+        else:
+            context['can_review'] = False
+        return context

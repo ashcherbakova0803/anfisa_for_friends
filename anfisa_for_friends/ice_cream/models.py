@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 
 
 class Category(models.Model):
@@ -145,3 +146,35 @@ class IceCream(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def average_rating(self):
+        """Средний рейтинг с точностью до десятых."""
+        result = self.reviews.filter(is_published=True).aggregate(
+            avg=Avg('rating')
+        )['avg']
+        return round(result, 1) if result else 0
+
+    @property
+    def reviews_count(self):
+        """Количество опубликованных отзывов."""
+        return self.reviews.filter(is_published=True).count()
+
+    @property
+    def stars_with_percent(self):
+        """
+        Возвращает список из 5 значений от 0 до 100:
+        процент заполнения каждой звезды.
+        Пример для 4.8: [100, 100, 100, 100, 80]
+        """
+        avg = self.average_rating
+        stars = []
+        for i in range(1, 6):
+            if avg >= i:
+                stars.append(100)
+            elif avg > i - 1:
+                percent = int((avg - (i - 1)) * 100)
+                stars.append(percent)
+            else:
+                stars.append(0)
+        return stars

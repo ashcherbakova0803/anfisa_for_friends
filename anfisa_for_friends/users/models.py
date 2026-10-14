@@ -13,6 +13,12 @@ class User(AbstractUser):
         blank=True,
         help_text='Контактный номер телефона'
     )
+    address = models.TextField(
+        'Адрес доставки',
+        max_length=300,
+        blank=True,
+        help_text='Адрес по умолчанию для доставки заказов'
+    )
     avatar = models.ImageField(
         'Аватар',
         upload_to='avatars/',

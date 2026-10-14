@@ -87,7 +87,7 @@ def cart_update_ajax(request):
 def order_create(request):
     """
     Оформление заказа из корзины.
-    Создаёт заказ, переносит позиции из корзины, очищает корзину.
+    Если пользователь авторизован, поля предзаполняются из профиля.
     """
     cart_service = CartService(request)
     cart = cart_service.cart
@@ -115,11 +115,21 @@ def order_create(request):
                 )
 
             cart_service.clear()
-
             messages.success(request, 'Заказ успешно оформлен!')
             return redirect('cart:order_success', order_id=order.id)
     else:
-        form = OrderCreateForm()
+        # Предзаполняем форму из профиля пользователя
+        if request.user.is_authenticated:
+            initial_data = {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'phone': request.user.phone,
+                'email': request.user.email,
+                'address': request.user.address,
+            }
+            form = OrderCreateForm(initial=initial_data)
+        else:
+            form = OrderCreateForm()
 
     return render(request, 'cart/order_create.html', {
         'form': form,

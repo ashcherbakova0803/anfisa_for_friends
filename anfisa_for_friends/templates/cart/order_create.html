@@ -7,6 +7,14 @@
 {% block content %}
   <h1 class="mb-4">Оформление заказа</h1>
 
+  {% if user.is_authenticated %}
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle me-2"></i>
+      Данные подставлены из вашего профиля. Если нужно что-то изменить —
+      <a href="{% url 'users:profile_edit' %}" class="alert-link">отредактируйте профиль</a>.
+    </div>
+  {% endif %}
+
   <div class="row">
     <div class="col-md-7">
       <div class="card shadow-sm">

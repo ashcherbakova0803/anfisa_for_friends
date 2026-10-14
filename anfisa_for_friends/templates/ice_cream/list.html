@@ -18,15 +18,19 @@
       <div class="card-body">
         <form method="get" class="row g-3 align-items-end">
           <div class="col-md-4">
+            <label class="form-label fw-bold small text-muted">{{ filter.form.search.label }}</label>
+            {{ filter.form.search }}
+          </div>
+          <div class="col-md-4">
             <label class="form-label fw-bold small text-muted">{{ filter.form.category.label }}</label>
             {{ filter.form.category }}
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100 mb-1">
               <i class="fas fa-search me-1"></i> Применить
             </button>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-2">
             <a href="{% url 'ice_cream:ice_cream_list' %}" class="btn btn-outline-secondary w-100">
               <i class="fas fa-undo me-1"></i> Сбросить
             </a>

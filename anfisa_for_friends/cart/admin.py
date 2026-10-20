@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cart, CartItem, Order, OrderItem
+from .models import Cart, CartItem, Order, OrderItem, PromoCode
 
 
 class OrderItemInline(admin.TabularInline):
@@ -28,3 +28,11 @@ class CartAdmin(admin.ModelAdmin):
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'cart', 'product', 'quantity')
     search_fields = ('product__title',)
+
+
+@admin.register(PromoCode)
+class PromoCodeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'discount_percent', 'valid_until',
+                    'is_active', 'used_count', 'max_uses')
+    list_filter = ('is_active', 'valid_until')
+    search_fields = ('code',)

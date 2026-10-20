@@ -13,4 +13,10 @@ urlpatterns = [
     path('order/success/<int:order_id>/',
          views.order_success, name='order_success'),
     path('orders/', views.order_history, name='order_history'),
+    path('order/repeat/<int:order_id>/check/',
+         views.order_repeat_check, name='order_repeat_check'),
+    path('order/repeat/<int:order_id>/',
+         views.order_repeat, name='order_repeat'),
+    path('promo/apply/', views.apply_promo, name='apply_promo'),
+    path('promo/remove/', views.remove_promo, name='remove_promo'),
 ]

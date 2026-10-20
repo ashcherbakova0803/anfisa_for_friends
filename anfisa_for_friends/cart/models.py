@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 
 class Cart(models.Model):
@@ -164,3 +166,74 @@ class OrderItem(models.Model):
     def total_price(self):
         """Стоимость позиции: цена × количество."""
         return self.price * self.quantity
+
+
+class PromoCode(models.Model):
+    """
+    Модель промокода.
+    Позволяет применять процентную скидку к заказу.
+    """
+    code = models.CharField(
+        'Код',
+        max_length=50,
+        unique=True,
+        help_text='Например, SUMMER15'
+    )
+    discount_percent = models.PositiveSmallIntegerField(
+        'Скидка (%)',
+        validators=[MinValueValidator(1), MaxValueValidator(100)],
+        help_text='Процент скидки от 1 до 100'
+    )
+    valid_from = models.DateTimeField(
+        'Действует с',
+        default=timezone.now
+    )
+    valid_until = models.DateTimeField(
+        'Действует до',
+        help_text='Дата и время окончания действия'
+    )
+    is_active = models.BooleanField(
+        'Активен',
+        default=True,
+        help_text='Можно ли использовать промокод'
+    )
+    max_uses = models.PositiveIntegerField(
+        'Максимум использований',
+        null=True,
+        blank=True,
+        help_text='Оставьте пустым, если неограниченно'
+    )
+    used_count = models.PositiveIntegerField(
+        'Использовано раз',
+        default=0
+    )
+
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
+        ordering = ['-valid_until']
+
+    def __str__(self):
+        return f'{self.code} ({self.discount_percent}%)'
+
+    @property
+    def is_valid(self):
+        """
+        Проверяет, действителен ли промокод:
+        - активен
+        - в пределах срока действия
+        - не исчерпан лимит
+        """
+        now = timezone.now()
+        if not self.is_active:
+            return False
+        if self.valid_from > now or self.valid_until < now:
+            return False
+        if self.max_uses is not None and self.used_count >= self.max_uses:
+            return False
+        return True
+
+    def apply(self):
+        """Увеличивает счётчик использований."""
+        self.used_count += 1
+        self.save(update_fields=['used_count'])

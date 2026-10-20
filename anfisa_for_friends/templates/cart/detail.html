@@ -62,7 +62,48 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <h4>Итого</h4>
-            <p class="h3 text-primary" id="cart-total">{{ cart.total_price }} ₽</p>
+
+            <div class="mb-3">
+              <label class="form-label small">Промокод</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  id="promoInput"
+                  class="form-control"
+                  placeholder="Введите код"
+                  value="{{ promo.code|default:'' }}"
+                  {% if promo %}disabled{% endif %}
+                >
+                {% if promo %}
+                  <button class="btn btn-outline-danger" type="button" id="promoRemoveBtn">
+                    <i class="fas fa-times"></i>
+                  </button>
+                {% else %}
+                  <button class="btn btn-outline-primary" type="button" id="promoApplyBtn">
+                    Применить
+                  </button>
+                {% endif %}
+              </div>
+              <div id="promoError" class="text-danger small mt-1" style="display: none;"></div>
+              <div id="promoSuccess" class="text-success small mt-1" style="display: none;"></div>
+            </div>
+
+            <hr>
+            <div class="d-flex justify-content-between mb-1">
+              <span>Сумма:</span>
+              <span id="cartSubtotal">{{ totals.subtotal }} ₽</span>
+            </div>
+            {% if promo %}
+              <div class="d-flex justify-content-between mb-1 text-success">
+                <span>Скидка ({{ promo.discount_percent }}%):</span>
+                <span id="cartDiscount">−{{ totals.discount }} ₽</span>
+              </div>
+            {% endif %}
+            <div class="d-flex justify-content-between mb-3">
+              <strong>К оплате:</strong>
+              <strong class="text-primary" id="cartTotal">{{ totals.total }} ₽</strong>
+            </div>
+
             <a href="{% url 'cart:order_create' %}" class="btn btn-primary w-100">
               <i class="fas fa-check me-1"></i> Оформить заказ
             </a>
@@ -76,45 +117,63 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        const quantityInputs = document.querySelectorAll('.quantity-input');
-        const cartTotalEl = document.getElementById('cart-total');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        const promoInput = document.getElementById('promoInput');
+        const promoApplyBtn = document.getElementById('promoApplyBtn');
+        const promoRemoveBtn = document.getElementById('promoRemoveBtn');
+        const promoError = document.getElementById('promoError');
+        const promoSuccess = document.getElementById('promoSuccess');
 
-        quantityInputs.forEach(function (input) {
-          input.addEventListener('change', function () {
-            const row = this.closest('tr');
-            const itemId = row.dataset.itemId;
-            const quantity = parseInt(this.value);
-
-            if (quantity < 1) {
-              this.value = 1;
+        if (promoApplyBtn) {
+          promoApplyBtn.addEventListener('click', function () {
+            const code = promoInput.value.trim();
+            if (!code) {
+              promoError.textContent = 'Введите промокод';
+              promoError.style.display = 'block';
               return;
             }
 
-            fetch('{% url "cart:cart_update_ajax" %}', {
+            promoError.style.display = 'none';
+            promoSuccess.style.display = 'none';
+
+            fetch('{% url "cart:apply_promo" %}', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
               },
-              body: JSON.stringify({ item_id: itemId, quantity: quantity }),
+              body: JSON.stringify({ code: code }),
             })
-              .then((response) => response.json())
-              .then((data) => {
+              .then(response => response.json())
+              .then(data => {
                 if (data.success) {
-                  row.querySelector('.item-total').textContent = data.item_total + ' ₽';
-                  cartTotalEl.textContent = data.cart_total + ' ₽';
-
-                  const badge = document.querySelector('.cart-badge');
-                  if (badge) {
-                    badge.textContent = data.cart_items;
-                    if (data.cart_items === 0) badge.style.display = 'none';
-                  }
+                  location.reload();
+                } else {
+                  promoError.textContent = data.error || 'Ошибка';
+                  promoError.style.display = 'block';
                 }
               })
-              .catch((error) => console.error('Ошибка:', error));
+              .catch(() => {
+                promoError.textContent = 'Ошибка сети';
+                promoError.style.display = 'block';
+              });
           });
-        });
+        }
+
+        if (promoRemoveBtn) {
+          promoRemoveBtn.addEventListener('click', function () {
+            fetch('{% url "cart:remove_promo" %}', {
+              method: 'POST',
+              headers: { 'X-CSRFToken': csrfToken },
+            })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  location.reload();
+                }
+              });
+          });
+        }
       });
     </script>
   {% else %}

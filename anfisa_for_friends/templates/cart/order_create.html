@@ -51,9 +51,15 @@
               </li>
             {% endfor %}
           </ul>
-          <div class="d-flex justify-content-between mt-3">
+          {% if promo %}
+            <div class="d-flex justify-content-between">
+              <span>Скидка ({{ promo.discount_percent }}%):</span>
+              <span class="text-success">−{{ totals.discount }} ₽</span>
+            </div>
+          {% endif %}
+          <div class="d-flex justify-content-between">
             <strong>Итого:</strong>
-            <strong class="text-primary">{{ cart.total_price }} ₽</strong>
+            <strong class="text-primary">{{ totals.total }} ₽</strong>
           </div>
         </div>
       </div>

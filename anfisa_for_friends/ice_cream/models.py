@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models import Avg
+from django.utils.text import slugify
+from unidecode import unidecode
 
 
 class Category(models.Model):
@@ -35,8 +37,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            from django.utils.text import slugify
-            self.slug = slugify(self.name)
+            self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
 
@@ -45,6 +46,7 @@ class Ingredient(models.Model):
     Модель ингредиента, используемого в мороженом.
     Связана с IceCream через ManyToMany.
     """
+
     name = models.CharField(
         'Название ингредиента',
         max_length=100,
@@ -62,9 +64,8 @@ class Ingredient(models.Model):
 
 
 class IceCream(models.Model):
-    """
-    Модель, представляющая продукт (мороженое).
-    """
+    """Модель, представляющая продукт (мороженое)."""
+
     title = models.CharField(
         'Название',
         max_length=200,

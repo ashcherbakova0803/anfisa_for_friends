@@ -1,11 +1,10 @@
 from django import forms
+
 from .models import Subscriber
 
 
 class SubscriberForm(forms.ModelForm):
-    """
-    Форма подписки на рассылку.
-    """
+    """Форма подписки на рассылку."""
 
     class Meta:
         model = Subscriber

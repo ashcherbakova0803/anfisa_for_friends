@@ -1,6 +1,6 @@
-from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 
 class Review(models.Model):
@@ -9,6 +9,7 @@ class Review(models.Model):
     Оставить отзыв может только пользователь, который заказал этот товар
     и чей заказ имеет статус «Выполнен».
     """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -49,9 +50,8 @@ class Review(models.Model):
 
 
 class ReviewImage(models.Model):
-    """
-    Модель фотографии, прикреплённой к отзыву.
-    """
+    """Модель фотографии, прикреплённой к отзыву."""
+
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
@@ -74,9 +74,7 @@ class ReviewImage(models.Model):
 
 
 def can_review(user, product):
-    """
-    Проверяет, может ли пользователь оставить отзыв на товар.
-    """
+    """Проверяет, может ли пользователь оставить отзыв на товар."""
     if not user.is_authenticated:
         return False
 

@@ -18,11 +18,21 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Cart',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('session_key', models.CharField(blank=True, db_index=True, max_length=40, null=True, verbose_name='Ключ сессии')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Дата обновления')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='carts', to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('session_key', models.CharField(blank=True, db_index=True,
+                 max_length=40, null=True, verbose_name='Ключ сессии')),
+                ('created_at', models.DateTimeField(
+                    auto_now_add=True, verbose_name='Дата создания')),
+                ('updated_at', models.DateTimeField(
+                    auto_now=True, verbose_name='Дата обновления')),
+                ('user',
+                 models.ForeignKey(blank=True,
+                                   null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='carts',
+                                   to=settings.AUTH_USER_MODEL,
+                                   verbose_name='Пользователь')),
             ],
             options={
                 'verbose_name': 'Корзина',
@@ -32,11 +42,21 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CartItem',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=1, verbose_name='Количество')),
-                ('added_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления')),
-                ('cart', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='cart.cart', verbose_name='Корзина')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ice_cream.icecream', verbose_name='Товар')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('quantity', models.PositiveIntegerField(
+                    default=1, verbose_name='Количество')),
+                ('added_at', models.DateTimeField(
+                    auto_now_add=True, verbose_name='Дата добавления')),
+                ('cart',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='items',
+                                   to='cart.cart',
+                                   verbose_name='Корзина')),
+                ('product',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to='ice_cream.icecream',
+                                   verbose_name='Товар')),
             ],
             options={
                 'verbose_name': 'Позиция корзины',

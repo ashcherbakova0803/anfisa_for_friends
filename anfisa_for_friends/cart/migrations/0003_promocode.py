@@ -15,14 +15,30 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PromoCode',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(help_text='Например, SUMMER15', max_length=50, unique=True, verbose_name='Код')),
-                ('discount_percent', models.PositiveSmallIntegerField(help_text='Процент скидки от 1 до 100', validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(100)], verbose_name='Скидка (%)')),
-                ('valid_from', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Действует с')),
-                ('valid_until', models.DateTimeField(help_text='Дата и время окончания действия', verbose_name='Действует до')),
-                ('is_active', models.BooleanField(default=True, help_text='Можно ли использовать промокод', verbose_name='Активен')),
-                ('max_uses', models.PositiveIntegerField(blank=True, help_text='Оставьте пустым, если неограниченно', null=True, verbose_name='Максимум использований')),
-                ('used_count', models.PositiveIntegerField(default=0, verbose_name='Использовано раз')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('code', models.CharField(help_text='Например, SUMMER15',
+                 max_length=50, unique=True, verbose_name='Код')),
+                ('discount_percent',
+                 models.PositiveSmallIntegerField(help_text='Процент скидки от 1 до 100',
+                                                  validators=[django.core.validators.MinValueValidator(1),
+                                                              django.core.validators.MaxValueValidator(100)],
+                                                  verbose_name='Скидка (%)')),
+                ('valid_from', models.DateTimeField(
+                    default=django.utils.timezone.now, verbose_name='Действует с')),
+                ('valid_until', models.DateTimeField(
+                    help_text='Дата и время окончания действия', verbose_name='Действует до')),
+                ('is_active',
+                 models.BooleanField(default=True,
+                                     help_text='Можно ли использовать промокод',
+                                     verbose_name='Активен')),
+                ('max_uses',
+                 models.PositiveIntegerField(blank=True,
+                                             help_text='Оставьте пустым, если неограниченно',
+                                             null=True,
+                                             verbose_name='Максимум использований')),
+                ('used_count', models.PositiveIntegerField(
+                    default=0, verbose_name='Использовано раз')),
             ],
             options={
                 'verbose_name': 'Промокод',

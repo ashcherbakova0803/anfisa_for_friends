@@ -1,6 +1,6 @@
-from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.utils import timezone
 
 
@@ -9,6 +9,7 @@ class Cart(models.Model):
     Модель корзины.
     Привязана к пользователю (если авторизован) или к сессии (если гость).
     """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -48,9 +49,8 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    """
-    Модель позиции в корзине (товар + количество).
-    """
+    """Модель позиции в корзине (товар + количество)."""
+
     cart = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,
@@ -80,10 +80,8 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
-    """
-    Модель заказа.
-    Создаётся при оформлении корзины.
-    """
+    """Модель заказа. Создаётся при оформлении корзины."""
+
     STATUS_CHOICES = [
         ('new', 'Новый'),
         ('processing', 'В обработке'),
@@ -127,7 +125,7 @@ class Order(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Заказ №{self.id} от {self.created_at:%d.%m.%Y}'
+        return f'Заказ №{self.id} от {self.created_at:%d.%m.%Y}'  # noqa: E231
 
     @property
     def total_items(self):
@@ -136,9 +134,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    """
-    Модель позиции заказа (товар + количество + цена на момент заказа).
-    """
+    """Модель позиции заказа (товар + количество + цена на момент заказа)."""
+
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
@@ -169,10 +166,8 @@ class OrderItem(models.Model):
 
 
 class PromoCode(models.Model):
-    """
-    Модель промокода.
-    Позволяет применять процентную скидку к заказу.
-    """
+    """Модель промокода. Позволяет применять процентную скидку к заказу."""
+
     code = models.CharField(
         'Код',
         max_length=50,

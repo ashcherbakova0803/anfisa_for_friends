@@ -2,3 +2,4 @@ Django==6.1
 django-filter==26.1
 pillow==12.3.0
 python-dotenv==1.2.3
+unidecode==1.4.0

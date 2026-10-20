@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import IceCreamListView, IceCreamDetailView
+from .views import IceCreamDetailView, IceCreamListView
 
 app_name = 'ice_cream'
 

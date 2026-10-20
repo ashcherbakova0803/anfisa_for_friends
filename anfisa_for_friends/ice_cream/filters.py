@@ -1,9 +1,8 @@
-from django.db import models
-from django.db.models.functions import Lower
 import django_filters
 from django import forms
+from django.db import models
 
-from .models import IceCream, Category
+from .models import Category, IceCream
 
 
 class IceCreamFilter(django_filters.FilterSet):
@@ -11,6 +10,7 @@ class IceCreamFilter(django_filters.FilterSet):
     Набор фильтров для каталога мороженого.
     Позволяет фильтровать по категории и искать по названию/описанию.
     """
+
     category = django_filters.ModelChoiceFilter(
         field_name='category',
         queryset=Category.objects.all(),
@@ -40,12 +40,12 @@ class IceCreamFilter(django_filters.FilterSet):
         value_capitalize = value.capitalize()
 
         return queryset.filter(
-            models.Q(title__contains=value) |
-            models.Q(description__contains=value) |
-            models.Q(title__contains=value_lower) |
-            models.Q(description__contains=value_lower) |
-            models.Q(title__contains=value_upper) |
-            models.Q(description__contains=value_upper) |
-            models.Q(title__contains=value_capitalize) |
-            models.Q(description__contains=value_capitalize)
+            models.Q(title__contains=value)
+            | models.Q(description__contains=value)
+            | models.Q(title__contains=value_lower)
+            | models.Q(description__contains=value_lower)
+            | models.Q(title__contains=value_upper)
+            | models.Q(description__contains=value_upper)
+            | models.Q(title__contains=value_capitalize)
+            | models.Q(description__contains=value_capitalize)
         ).distinct()

@@ -1,14 +1,13 @@
-from django.shortcuts import redirect
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
+
 from .forms import SubscriberForm
 
 
 @require_POST
 def subscribe(request):
-    """
-    Подписка на рассылку.
-    """
+    """Подписка на рассылку."""
     form = SubscriberForm(request.POST)
     if form.is_valid():
         form.save()

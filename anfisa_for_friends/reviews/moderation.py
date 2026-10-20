@@ -8,17 +8,23 @@
 вроде `better_profanity` или `profanity-check`.
 """
 
-import re
 
-
-# Заглушка: список «плохих» слов для теста
+# Заглушка: список «плохих» слов для теста (без окончания)
 # В продакшене заменить на реальный список
 FORBIDDEN_WORDS = [
-    'плохоеслово',
-    'ругательство',
-    'запрещёнка',
+    'плохоеслов',
+    'ругательств',
+    'запрещёнк',  # пишем с "ё"
     'test_bad_word',
 ]
+
+
+def _normalize(text):
+    """
+    Приводит текст к единому виду для проверки:
+    нижний регистр и замена "ё" на "е".
+    """
+    return text.lower().replace('ё', 'е')
 
 
 def contains_forbidden_words(text):
@@ -29,9 +35,11 @@ def contains_forbidden_words(text):
     if not text:
         return False
 
-    text_lower = text.lower()
+    text_normalized = _normalize(text)
+
+    # Нормализуем слово из словаря, чтобы избежать проблем с "ё"
     for word in FORBIDDEN_WORDS:
-        if re.search(rf'\b{re.escape(word)}', text_lower):
+        if _normalize(word) in text_normalized:
             return True
     return False
 
@@ -44,9 +52,10 @@ def get_forbidden_words(text):
     if not text:
         return []
 
-    text_lower = text.lower()
     found = []
+    text_normalized = _normalize(text)
+
     for word in FORBIDDEN_WORDS:
-        if re.search(rf'\b{re.escape(word)}', text_lower):
+        if _normalize(word) in text_normalized:
             found.append(word)
     return found

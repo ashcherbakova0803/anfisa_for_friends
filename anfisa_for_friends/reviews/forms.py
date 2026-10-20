@@ -8,9 +8,9 @@ from .moderation import contains_forbidden_words
 class ReviewForm(forms.ModelForm):
     """
     Форма для создания отзыва.
-    Позволяет поставить оценку, написать текст и прикрепить одно фото.
     Проверяет текст на запрещённые слова.
     """
+
     image = forms.ImageField(
         label='Фото',
         widget=forms.ClearableFileInput(attrs={

@@ -14,10 +14,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Subscriber',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(help_text='Email для рассылки', max_length=254, unique=True, verbose_name='Email')),
-                ('is_active', models.BooleanField(default=True, help_text='Получает ли подписчик письма', verbose_name='Активна')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата подписки')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('email', models.EmailField(help_text='Email для рассылки',
+                 max_length=254, unique=True, verbose_name='Email')),
+                ('is_active',
+                 models.BooleanField(default=True,
+                                     help_text='Получает ли подписчик письма',
+                                     verbose_name='Активна')),
+                ('created_at', models.DateTimeField(
+                    auto_now_add=True, verbose_name='Дата подписки')),
             ],
             options={
                 'verbose_name': 'Подписчик',

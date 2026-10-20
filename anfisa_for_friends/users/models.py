@@ -7,6 +7,7 @@ class User(AbstractUser):
     Кастомная модель пользователя.
     Расширяет стандартную AbstractUser дополнительными полями.
     """
+
     phone = models.CharField(
         'Телефон',
         max_length=20,

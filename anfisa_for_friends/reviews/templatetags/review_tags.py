@@ -12,13 +12,13 @@ def render_stars(percentages):
     """
     html = '<div class="stars-container">'
     for percent in percentages:
-        html += f'''
-        <span class="star-wrapper">
-            <i class="far fa-star star-empty"></i>
-            <span class="star-filled" style="width: {percent}%;">
-                <i class="fas fa-star"></i>
-            </span>
-        </span>
-        '''
+        html += (
+            '<span class="star-wrapper">'
+            '<i class="far fa-star star-empty"></i>'
+            f'<span class="star-filled" style="width: {percent}%">'
+            '<i class="fas fa-star"></i>'
+            '</span>'
+            '</span>'
+        )
     html += '</div>'
     return mark_safe(html)

@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.views.generic import DetailView
-
 from django_filters.views import FilterView
 
 from reviews.models import can_review
@@ -9,9 +8,8 @@ from .models import IceCream
 
 
 class IceCreamListView(FilterView):
-    """
-    Отображает список всех продуктов.
-    """
+    """Отображает список всех продуктов."""
+
     model = IceCream
     template_name = 'ice_cream/list.html'
     context_object_name = 'ice_cream_list'
@@ -30,6 +28,7 @@ class IceCreamDetailView(DetailView):
     Отображает детальную информацию о продукте.
     Показывает последние отзывы и поддерживает сортировку.
     """
+
     model = IceCream
     template_name = 'ice_cream/detail.html'
     context_object_name = 'ice_cream'

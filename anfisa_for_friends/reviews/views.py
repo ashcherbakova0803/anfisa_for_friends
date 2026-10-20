@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.db.models import Count
-from django.core.paginator import Paginator
 from django.conf import settings
-
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect, render
 from ice_cream.models import IceCream
-from .models import Review, ReviewImage, can_review
+
 from .forms import ReviewForm
+from .models import Review, ReviewImage, can_review
 
 
 def review_list(request):
@@ -64,9 +64,7 @@ def review_list(request):
 
 @login_required
 def review_create(request, product_id):
-    """
-    Создание отзыва на товар.
-    """
+    """Создание отзыва на товар."""
     product = get_object_or_404(IceCream, id=product_id)
 
     if not can_review(request.user, product):

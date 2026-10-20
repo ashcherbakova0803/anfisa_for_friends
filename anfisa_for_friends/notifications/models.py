@@ -6,6 +6,7 @@ class Subscriber(models.Model):
     Модель подписчика на рассылку.
     Хранит email и дату подписки.
     """
+
     email = models.EmailField(
         'Email',
         unique=True,

@@ -7,4 +7,4 @@ class CartConfig(AppConfig):
     verbose_name = 'Корзина и заказы'
 
     def ready(self):
-        import cart.signals
+        pass

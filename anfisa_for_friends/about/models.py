@@ -2,9 +2,8 @@ from django.db import models
 
 
 class ContactRequest(models.Model):
-    """
-    Модель заявки с формы обратной связи.
-    """
+    """Модель заявки с формы обратной связи."""
+
     REQUEST_TYPES = [
         ('person', 'Физлицо'),
         ('company', 'Юрлицо'),

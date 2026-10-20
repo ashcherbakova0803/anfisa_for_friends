@@ -1,2 +1,10 @@
 flake8==5.0.4
+flake8-docstrings==1.7.0
+pep8-naming==0.13.3
+pycodestyle==2.9.1
+pyflakes==2.5.0
 isort==8.0.1
+pytest==9.1.1
+pytest-django==4.14.0
+autopep8
+autoflake

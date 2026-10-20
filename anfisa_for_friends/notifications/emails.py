@@ -1,6 +1,7 @@
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
+
 from .models import Subscriber
 
 
@@ -20,9 +21,7 @@ def _send_email(subject, template_name, context, recipient_list):
 
 
 def send_order_confirmation(order):
-    """
-    Отправляет письмо с подтверждением заказа.
-    """
+    """Отправляет письмо с подтверждением заказа."""
     if not order.email:
         return
     _send_email(
@@ -34,9 +33,7 @@ def send_order_confirmation(order):
 
 
 def send_welcome_email(user):
-    """
-    Отправляет приветственное письмо после регистрации.
-    """
+    """Отправляет приветственное письмо после регистрации."""
     if not user.email:
         return
     _send_email(

@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import login, update_session_auth_hash, get_user_model
-from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+
 from .forms import UserForm, UserRegisterForm
 
 User = get_user_model()
@@ -27,18 +28,14 @@ def register(request):
 
 @login_required
 def profile_view(request, username):
-    """
-    Страница профиля пользователя.
-    """
+    """Страница профиля пользователя."""
     user = get_object_or_404(User, username=username)
     return render(request, 'users/profile.html', {'profile_user': user})
 
 
 @login_required
 def profile_edit(request):
-    """
-    Редактирование профиля текущего пользователя.
-    """
+    """Редактирование профиля текущего пользователя."""
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -52,9 +49,7 @@ def profile_edit(request):
 
 @login_required
 def password_change(request):
-    """
-    Смена пароля текущего пользователя.
-    """
+    """Смена пароля текущего пользователя."""
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():

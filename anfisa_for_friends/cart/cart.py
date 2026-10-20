@@ -1,5 +1,6 @@
-from .models import Cart, CartItem
 from ice_cream.models import IceCream
+
+from .models import Cart, CartItem
 
 
 class CartService:
@@ -28,9 +29,7 @@ class CartService:
         return cart
 
     def add(self, product_id, quantity=1):
-        """
-        Добавляет товар в корзину или увеличивает его количество.
-        """
+        """Добавляет товар в корзину или увеличивает его количество."""
         product = IceCream.objects.get(id=product_id)
         item, created = CartItem.objects.get_or_create(
             cart=self.cart,

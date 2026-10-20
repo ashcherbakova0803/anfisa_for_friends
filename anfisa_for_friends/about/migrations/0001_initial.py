@@ -14,14 +14,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContactRequest',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, verbose_name='Имя / Название компании')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=200,
+                 verbose_name='Имя / Название компании')),
                 ('email', models.EmailField(max_length=254, verbose_name='Email')),
-                ('phone', models.CharField(blank=True, max_length=20, verbose_name='Телефон')),
-                ('request_type', models.CharField(choices=[('person', 'Физлицо'), ('company', 'Юрлицо')], default='person', max_length=20, verbose_name='Тип обращения')),
+                ('phone', models.CharField(blank=True,
+                 max_length=20, verbose_name='Телефон')),
+                ('request_type',
+                 models.CharField(choices=[('person',
+                                            'Физлицо'),
+                                           ('company',
+                                            'Юрлицо')],
+                                  default='person',
+                                  max_length=20,
+                                  verbose_name='Тип обращения')),
                 ('message', models.TextField(verbose_name='Сообщение')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
-                ('is_processed', models.BooleanField(default=False, verbose_name='Обработано')),
+                ('created_at', models.DateTimeField(
+                    auto_now_add=True, verbose_name='Дата создания')),
+                ('is_processed', models.BooleanField(
+                    default=False, verbose_name='Обработано')),
             ],
             options={
                 'verbose_name': 'Обращение',

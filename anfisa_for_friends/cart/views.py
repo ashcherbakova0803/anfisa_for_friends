@@ -3,21 +3,18 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from django.shortcuts import render, redirect, get_object_or_404
-
-
 from notifications.emails import send_order_confirmation
+
 from .cart import CartService
 from .forms import OrderCreateForm
 from .models import Order, OrderItem, PromoCode
-from .promo import get_promo_from_session, apply_promo_to_cart
+from .promo import apply_promo_to_cart, get_promo_from_session
 
 
 def cart_detail(request):
-    """
-    Страница корзины с итоговой суммой и применённым промокодом.
-    """
+    """Страница корзины с итоговой суммой и применённым промокодом."""
     cart_service = CartService(request)
     cart = cart_service.cart
     promo = get_promo_from_session(request)
@@ -45,9 +42,7 @@ def cart_add(request, product_id):
 
 @require_POST
 def cart_update(request, item_id):
-    """
-    Обновляет количество товара в позиции (через обычную форму).
-    """
+    """Обновляет количество товара в позиции (через обычную форму)."""
     cart_service = CartService(request)
     quantity = int(request.POST.get('quantity', 1))
     cart_service.update_quantity(item_id, quantity)
@@ -56,9 +51,7 @@ def cart_update(request, item_id):
 
 @require_POST
 def cart_remove(request, item_id):
-    """
-    Удаляет позицию из корзины.
-    """
+    """Удаляет позицию из корзины."""
     cart_service = CartService(request)
     cart_service.remove(item_id)
     messages.info(request, 'Товар удалён из корзины.')
@@ -157,18 +150,14 @@ def order_create(request):
 
 
 def order_success(request, order_id):
-    """
-    Страница «Спасибо за заказ».
-    """
+    """Страница «Спасибо за заказ»."""
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'cart/order_success.html', {'order': order})
 
 
 @login_required
 def order_history(request):
-    """
-    История заказов текущего пользователя.
-    """
+    """История заказов текущего пользователя."""
     orders = Order.objects.filter(user=request.user)
     return render(request, 'cart/order_history.html', {'orders': orders})
 
@@ -226,13 +215,15 @@ def order_repeat(request, order_id):
             if not skip_unavailable:
                 messages.warning(
                     request,
-                    f'Товар «{item.product_title}» закончился и не был добавлен.'
+                    f'Товар «{
+                        item.product_title}» закончился и не был добавлен.'
                 )
 
     if added_count > 0:
         messages.success(
             request,
-            f'В корзину добавлено {added_count} товар(ов) из заказа №{order.id}.'
+            f'В корзину добавлено {added_count} товар(ов) из заказа №{
+                order.id}.'
         )
     if skipped_count > 0 and skip_unavailable:
         messages.info(
@@ -253,7 +244,8 @@ def apply_promo(request):
         data = json.loads(request.body)
         code = data.get('code', '').strip().upper()
     except (ValueError, json.JSONDecodeError):
-        return JsonResponse({'success': False, 'error': 'Некорректный запрос'}, status=400)
+        return JsonResponse(
+            {'success': False, 'error': 'Некорректный запрос'}, status=400)
 
     if not code:
         return JsonResponse({'success': False, 'error': 'Введите промокод'})
@@ -264,7 +256,8 @@ def apply_promo(request):
         return JsonResponse({'success': False, 'error': 'Промокод не найден'})
 
     if not promo.is_valid:
-        return JsonResponse({'success': False, 'error': 'Промокод недействителен или истёк'})
+        return JsonResponse(
+            {'success': False, 'error': 'Промокод недействителен или истёк'})
 
     request.session['promo_code'] = promo.code
 
@@ -283,9 +276,7 @@ def apply_promo(request):
 
 @require_POST
 def remove_promo(request):
-    """
-    Удаляет промокод из сессии.
-    """
+    """Удаляет промокод из сессии."""
     request.session.pop('promo_code', None)
     cart_service = CartService(request)
     totals = apply_promo_to_cart(cart_service.cart, None)

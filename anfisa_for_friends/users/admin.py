@@ -1,15 +1,13 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
 
 User = get_user_model()
 
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    """
-    Настройка отображения кастомной модели User в админке.
-    """
+    """Настройка отображения кастомной модели User в админке."""
 
     list_display = (
         'username',
@@ -34,7 +32,12 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('phone', 'avatar', 'bio')
         }),
         ('Права доступа', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+            'fields': (
+                'is_active',
+                'is_staff',
+                'is_superuser',
+                'groups',
+                'user_permissions')
         }),
         ('Важные даты', {
             'fields': ('last_login', 'date_joined')

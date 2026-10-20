@@ -13,6 +13,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='address',
-            field=models.TextField(blank=True, help_text='Адрес по умолчанию для доставки заказов', max_length=300, verbose_name='Адрес доставки'),
+            field=models.TextField(
+                blank=True,
+                help_text='Адрес по умолчанию для доставки заказов',
+                max_length=300,
+                verbose_name='Адрес доставки'),
         ),
     ]

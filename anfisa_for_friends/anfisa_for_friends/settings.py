@@ -15,6 +15,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY', '')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

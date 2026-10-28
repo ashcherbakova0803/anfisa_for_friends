@@ -123,7 +123,8 @@
         const promoRemoveBtn = document.getElementById('promoRemoveBtn');
         const promoError = document.getElementById('promoError');
         const promoSuccess = document.getElementById('promoSuccess');
-
+        
+        // === ЛОГИКА ДЛЯ ПРОМОКОДОВ ===
         if (promoApplyBtn) {
           promoApplyBtn.addEventListener('click', function () {
             const code = promoInput.value.trim();
@@ -174,8 +175,50 @@
               });
           });
         }
+
+        // НОВАЯ ЛОГИКА ДЛЯ ИЗМЕНЕНИЯ КОЛИЧЕСТВА (AJAX)
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const cartTotalEl = document.getElementById('cartTotal');
+
+        quantityInputs.forEach(function (input) {
+          input.addEventListener('change', function () {
+            const row = this.closest('tr');
+            const itemId = row.dataset.itemId;
+            const quantity = parseInt(this.value);
+
+            if (quantity < 1) {
+              this.value = 1;
+              return;
+            }
+
+            fetch('{% url "cart:cart_update_ajax" %}', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+              },
+              body: JSON.stringify({ item_id: itemId, quantity: quantity }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  row.querySelector('.item-total').textContent = data.item_total + ' ₽';
+                  if (cartTotalEl) cartTotalEl.textContent = data.cart_total + ' ₽';
+
+                  const badge = document.querySelector('.cart-badge');
+                  if (badge) {
+                    badge.textContent = data.cart_items;
+                    if (data.cart_items === 0) badge.style.display = 'none';
+                  }
+                }
+              })
+              .catch((error) => console.error('Ошибка AJAX:', error));
+          });
+        });
       });
     </script>
+
+
   {% else %}
     <div class="text-center py-5">
       <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
